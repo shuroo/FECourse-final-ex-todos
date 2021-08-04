@@ -1,0 +1,10 @@
+.col {
+    border: 3px solid lightgray;
+}
+
+.col h1 {
+    text-align: center;
+    margin: 10px;
+}
+
+.formWrapper {}

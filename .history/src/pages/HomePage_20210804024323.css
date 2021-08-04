@@ -1,0 +1,22 @@
+.col {
+    border: 3px solid lightgray;
+}
+
+.col h1 {
+    text-align: center;
+    margin: 10px;
+}
+
+.formWrapper {}
+
+.row {
+    display: flex;
+    align-items: stretch;
+    border: 2px solid greenyellow;
+}
+
+.row * {
+    margin: auto;
+    width: 30%;
+    text-align: right;
+}

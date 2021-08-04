@@ -1,0 +1,29 @@
+.col {
+    border: 3px solid lightgray;
+}
+
+.col h1 {
+    text-align: center;
+    margin: 10px;
+}
+
+.row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
+.row>* {
+    width: 30%;
+    padding-right: 10px;
+    padding: 10px;
+}
+
+.row input {
+    width: 10%;
+}
+
+.row button {
+    width: auto;
+    flex-grow: 1;
+}
