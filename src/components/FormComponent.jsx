@@ -9,8 +9,8 @@ function FormComponent({tasks,setTasks}) {
  
     function addATask(e){
         if(e.charCode===13){
-          const newTaskName = document.getElementById("tasksAddInput").value;  
-            setTasks(newTaskName);
+          const newTaskName = e.target.value;  
+             setTasks(newTaskName);
           } 
             
     }  

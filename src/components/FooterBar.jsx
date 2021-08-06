@@ -16,7 +16,7 @@ function FooterBar({setFilter}){
       <Nav.Link active key="All" onClick={()=>setFilter("All")} >All </Nav.Link> 
       <Nav.Link key="Active" onClick={()=>setFilter("Active")}  >Active
          </Nav.Link>  
-         <Nav.Link key="Active" onClick={()=>setFilter("Completed")}  >Completed </Nav.Link> 
+         <Nav.Link key="Completed" onClick={()=>setFilter("Completed")}  >Completed </Nav.Link> 
         </Nav>
         </Navbar.Collapse>
        

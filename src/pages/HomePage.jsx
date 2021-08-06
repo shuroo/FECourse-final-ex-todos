@@ -18,30 +18,40 @@ import TaskComponent from '../components/TaskComponent';
 
 function HomePage(){
 
-    function defaultFilter(task){ return true; }
+    function defaultFilter(task){ return task; }
     function activeTasksFilter(task){ return task && !task.isDone; }
     function completedTasksFilter(task){ return task && task.isDone; };
 
-    const [tasks, setTasks] = useState([]);
-    const [tasksFiltered, setTasksFiltered] = useState([...tasks]);
+    const [tasks, setTasks] = useState([]); 
     const [taskToAdd, setTaskToAdd] = useState("");
-    const [filterBy, setFilterBy] = useState("All");
     const [taskToRemove, setTaskToRemove] = useState("");
-    const [showAlert, setShowAlert] = useState("none");
-    // const [filteredTasks, setFilteredTasks] = useState(tasks);
+    const [filterBy, setFilterBy] = useState("All");
+    const [filterByFunc, setFilterByFunc] = useState(()=>defaultFilter);
+    const [showAlert, setShowAlert] = useState("none"); 
+    const [indexTaskToCheck,setIndexTaskToCheck] = useState(-1);
+    const [tasksView,setTasksView] = useState(null);
 
-    function updateTasks(){
-        const newTaskName = document.getElementById("tasksAddInput").value;  
-        const taskToAdd = new TaskModel(newTaskName,false); //todo: add key?
+
+useEffect(()=>{
+
+    let filterByFunc = ((filterBy === 'All') ? defaultFilter : 
+    ((filterBy === 'Active') ? activeTasksFilter : completedTasksFilter )); 
+    setFilterByFunc(filterByFunc);
+    const tView = (!tasks ? null :tasks.filter( (task)=>filterByFunc(task) ).map((task,index) =>{ 
+        return   <TaskComponent removeTask={removeTask} index={index}  checkTask={setIndexTaskToCheck} key={task.key} task={task}/>}));
+   
+    setTasksView(tView);
+},[tasks,filterBy,setFilterBy])
+
+    function addTask(newTaskName){ 
+        const taskToAdd = new TaskModel(newTaskName,tasks.length,false); //todo: add key?
         const tasksCpy = [...tasks];
         tasksCpy.push(taskToAdd); 
         setTasks(tasksCpy);
-        setTasksFiltered(tasksCpy);
-         
     }
 
     useEffect(() => {
-        updateTasks();
+        addTask(taskToAdd);
      }, [taskToAdd]) 
 
 
@@ -50,14 +60,14 @@ function HomePage(){
         const index = tasksCpy.map(function(item) {
             return item.key;
         }).indexOf(taskId);
+
         if(tasksCpy[index] && !tasksCpy[index].isDone){
             setShowAlert("block");
         }
-        setShowAlert("none");
+        else { setShowAlert("none"); }
         tasksCpy.splice(index, 1);
         setTasks(tasksCpy);
-        setTasksFiltered(tasksCpy);
-       
+   
     }
 
     useEffect(() => { 
@@ -65,25 +75,23 @@ function HomePage(){
       }, [taskToRemove]);
 
  
+  function checkTask(index){
+    const cpyTask = { ... tasks[index] };
+    cpyTask.isDone = (!cpyTask.isDone);
+    const tasksCpy = [...tasks];
+    tasksCpy[index] = cpyTask;
+    setTasks(tasksCpy);
+  }
 
-   useEffect(() => { 
-    let tasksCpy = [...tasks];
-    let filterByFunc = ((filterBy === 'All') ? defaultFilter : ((filterBy === 'Active') ? activeTasksFilter : completedTasksFilter )); 
-    tasksCpy = (!tasks ? null : tasksCpy.filter(filterByFunc));
-    //alert(tasksCpy.length);
-    setTasksFiltered(tasksCpy); 
-  }, [setFilterBy,filterBy]);
+  useEffect(() => { 
+    checkTask(indexTaskToCheck);
+  },[indexTaskToCheck]);
 
-   
-
-  // const tasksFiltered =  [...tasks].filter((task)=>filterBy(task));
-    const tasksView = (!tasksFiltered ? null :tasksFiltered.map((task,index) =>{ 
-        return <TaskComponent removeTask={removeTask} key={task.key+index} task={task}/>;}));
-
+    
     return (<Container  fluid="md" className="col-lg-6 col-md-6 col-sm-6 col">
             <h1>ToDos</h1>
-            <Alert key={"removeWarning"} variant="danger" style={{"display":showAlert}}>
-                Note - You are about to remove incomplete task!
+            <Alert key={"removeWarning"} variant="primary" style={{"display":showAlert}}>
+                Note - Removed an incomplete task!
             </Alert>
             <FormComponent tasks={tasks} setTasks={setTaskToAdd}/> 
             {tasksView}       

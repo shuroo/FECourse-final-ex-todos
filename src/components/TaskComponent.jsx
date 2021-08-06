@@ -3,14 +3,11 @@ import { Button, Row } from "react-bootstrap";
 import FormCheckInput from "react-bootstrap/esm/FormCheckInput";
 import Form from 'react-bootstrap/Form' 
 import '../pages/HomePage.css' 
-function TaskComponent({task,removeTask}){
-
+function TaskComponent({task,index,removeTask,checkTask}){
 
         return (
-
-        <Form.Group className="row-lg-12 row-sm-12 row-md-12 row" >
-   
-           <Form.Check type="checkbox" key={task.key}  onChange={(e)=>task.setIsDone(e.target.checked)}/> 
+        <Form.Group className="row-lg-12 row-sm-12 row-md-12 row" >   
+         <Form.Check type="checkbox"  checked={task.isDone} key={task.key} onChange={()=>checkTask(index)}/>  
            <Form.Label key={task.name} className={(task.isDone ? "strikeThrough" : "")}>{task.name} </Form.Label> 
            <Button className="button-primary" onClick={(()=>{removeTask(task.key)})} variant="outline-secondary" id="button-addon1">
            Remove {task.name}
